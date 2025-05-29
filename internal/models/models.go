@@ -11,3 +11,8 @@ type Quotes struct {
 	Author string `json:"author"`
 	Text   string `json:"quote"`
 }
+
+type Quote struct {
+	Author string `json:"author"`
+	Text   string `json:"quote"`
+}

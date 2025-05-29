@@ -16,7 +16,8 @@ type Config struct {
 	PostgresDB       string `env:"POSTGRES_DB" envDefault:"walletdb"`
 	PostgresSSLMode  string `env:"POSTGRES_SSLMODE" envDefault:"disable"`
 
-	ServerPort string `env:"SERVER_PORT" envDefault:"8080"`
+	ServerPort string `env:"SERVER_PORT" envDefault:":8080"`
+	TestApiUrl string `env:"TEST_API_URL" envDefault:"http://127.0.0.1"`
 }
 
 func Load() (*Config, error) {

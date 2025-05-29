@@ -18,13 +18,14 @@ func NewPostgresDB(cfg *config.Config) (*sqlx.DB, error) {
 		cfg.PostgresDB,
 		cfg.PostgresSSLMode,
 	)
-
-	fmt.Println(cfg.PostgresHost,
+	fmt.Println(
+		cfg.PostgresHost,
 		cfg.PostgresPort,
 		cfg.PostgresUser,
 		cfg.PostgresPassword,
 		cfg.PostgresDB,
-		cfg.PostgresSSLMode)
+		cfg.PostgresSSLMode,
+	)
 
 	db, err := sqlx.Open("postgres", connStr)
 	if err != nil {

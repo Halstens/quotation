@@ -1,11 +1,11 @@
 services:
-  wallet-app:
+  quotation-app:
     build: .
     ports:
-      - "4000:4000"
+      - "8080:8080"
     restart: always
     environment:
-      - PG_HOST=wallet-db
+      - PG_HOST=${POSTGRES_HOST}
       - PG_USER=${POSTGRES_USER}
       - PG_PASSWORD=${POSTGRES_PASSWORD}
       - PG_DBNAME=${POSTGRES_DB}
@@ -15,10 +15,10 @@ services:
       timeout: 5s
       retries: 5
     depends_on:
-      wallet-db:
+      quotation-db:
         condition: service_healthy
 
-  wallet-db:
+  quotation-db:
     restart: always
     image: postgres:15-alpine
     environment:
@@ -41,12 +41,12 @@ services:
     build: .
     image: golang:1.21-alpine
     depends_on:
-      wallet-app:
+      quotation-app:
         condition: service_healthy
-      wallet-db:
+      quotation-db:
         condition: service_healthy
     environment:
-      - TEST_API_URL=http://wallet-app:4000  # Тесты будут стучаться на основной сервер внутри сети Docker
+      - TEST_API_URL=http://localhost:8080  # Тесты будут стучаться на основной сервер внутри сети Docker
     command: ["go", "test", "-v", "./internal/tests"]  # Запуск тестов
 
 volumes:

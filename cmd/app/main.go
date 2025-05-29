@@ -20,17 +20,18 @@ type application struct {
 }
 
 func main() {
-	addr := flag.String("addr", ":4000", "Сетевой адрес HTTP")
-
-	flag.Parse()
-
-	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
-	errorLog := log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime)
 
 	cfg, err := config.Load()
 	if err != nil {
 		log.Fatalf("Failed to load config: %v", err)
 	}
+
+	addr := flag.String("addr", cfg.ServerPort, "Сетевой адрес HTTP")
+
+	flag.Parse()
+
+	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
+	errorLog := log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime)
 
 	// Подключение к БД
 	db, err := repository.NewPostgresDB(cfg)
