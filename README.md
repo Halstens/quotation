@@ -11,8 +11,8 @@ Quotation (микросервис)
 ## ⚙️ Запуск проекта
 
 ### Локальная разработка
-Развертка - docker-compose up --build
-Запуск тестов - go test -v ./internal/tests/
+- Развертка - docker-compose up --build
+- Запуск тестов - go test -v ./internal/tests/
 
 ## Решения
 1. Был добавлен обработчик ошибок для более понятного анализа
