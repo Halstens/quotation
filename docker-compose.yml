@@ -1,0 +1,53 @@
+services:
+  wallet-app:
+    build: .
+    ports:
+      - "4000:4000"
+    restart: always
+    environment:
+      - PG_HOST=wallet-db
+      - PG_USER=${POSTGRES_USER}
+      - PG_PASSWORD=${POSTGRES_PASSWORD}
+      - PG_DBNAME=${POSTGRES_DB}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    depends_on:
+      wallet-db:
+        condition: service_healthy
+
+  wallet-db:
+    restart: always
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_SSLMODE: ${POSTGRES_SSLMODE}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - wallet-data:/var/lib/postgresql/data
+      - ./database.sql:/docker-entrypoint-initdb.d/database.sql
+    ports:
+      - "5432:5433"
+  
+  wallet-tests:
+    build: .
+    image: golang:1.21-alpine
+    depends_on:
+      wallet-app:
+        condition: service_healthy
+      wallet-db:
+        condition: service_healthy
+    environment:
+      - TEST_API_URL=http://wallet-app:4000  # Тесты будут стучаться на основной сервер внутри сети Docker
+    command: ["go", "test", "-v", "./internal/tests"]  # Запуск тестов
+
+volumes:
+  wallet-data:
